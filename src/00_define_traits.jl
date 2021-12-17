@@ -16,4 +16,8 @@ using DrWatson
 import Pkg
 Pkg.add(["StatsPlots", "Distributions"])
 using StatsPlots, Distributions
-plot(Geometric(0.6))
+
+M = randn(1000,4)
+M[:,2] .+= 0.8sqrt.(abs.(M[:,1])) .- 0.5M[:,3] .+ 5
+M[:,3] .-= 0.7M[:,1].^2 .+ 2
+corrplot(M, label = ["x$i" for i=1:4])
