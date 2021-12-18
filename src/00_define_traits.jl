@@ -12,12 +12,26 @@
 using DrWatson
 @quickactivate "tuna-diet-prediction"
 
+
+# make distributions ===========================================================
+
 # define some set of 7 distributions to draw from for the continuous traits
 import Pkg
-Pkg.add(["StatsPlots", "Distributions"])
-using StatsPlots, Distributions
+Pkg.add(["StatsPlots", "Distributions", "Random","StatsBase"])
+Pkg.add("StatsBase")
+using StatsPlots, Distributions, Random, StatsBase
 
-M = randn(1000,4)
-M[:,2] .+= 0.8sqrt.(abs.(M[:,1])) .- 0.5M[:,3] .+ 5
-M[:,3] .-= 0.7M[:,1].^2 .+ 2
-corrplot(M, label = ["x$i" for i=1:4])
+M = zeros(100000,10)
+for i in 1:size(M, 1)
+    M[i,1] = rand(TruncatedNormal(0.5, 0.15, 0, 1))
+    M[i,2] = rand(TruncatedNormal(0.2, 0.4, 0, 1))
+    M[i,3] = rand(TruncatedNormal(0.7, 0.09, 0, 1))
+    M[i,4] = rand(Beta(5,2))
+    M[i,5] = rand(Beta(1,4))
+    M[i,6] = rand(Exponential(0.34))
+    M[i,7] = rand(truncated(Exponential(0.6), 0, 1))
+    M[i,8] = sample([1,2,3,4,5], Weights([5,5,1,1,3]))
+    M[i,9] = sample([1,2], Weights([1,1]))
+    M[i,10] = sample([1,2,3,4,5], Weights([1,1,1,10,1]))
+end
+density(M[:,:])
