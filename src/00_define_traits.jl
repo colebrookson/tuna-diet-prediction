@@ -58,3 +58,4 @@ function draw_sp()
 
     return(trait_array)
 end 
+
