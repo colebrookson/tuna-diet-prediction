@@ -14,10 +14,11 @@ using DrWatson
 @quickactivate "tuna-diet-prediction"
 include(srcdir("00_define_traits.jl"))
 
-# get all initial species traits by looping through number of prey (50) ========
+# get all species traits =======================================================
 
 # set empty matrix
 prey_matrix = zeros(50, 11)
+
 # fill matrix
 for i in 1:size(prey_matrix, 1)
     prey_matrix[i, 1] = i 
