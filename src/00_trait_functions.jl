@@ -54,11 +54,24 @@ the values of the actual predator max/min to the 0.01 and 0.99 interval, and
 then take the values and scale them to a distribution that gives f(X) ~= 1 when 
 x = mu (in this case, mu = 0.5, sd = 0.4)
 """
-function size_preference(i::Int, j::Int)
+function trait_preference(
+    i::Array, 
+    j::Int,
+    prey_matrix::Matrix
+    )
 
     # define the consumer & resource
-    C = get_species(species_list, i)
-    R = get_species(species_list, j)
+    C = i
+    R = prey_matrix[j]
+
+    # for each trait, set the predator's distribution of preference 
+    for k in size(prey_matrix, 2)
+        # limits are set by randomizing some amount away from zero and one that
+        # the distribution is limited to and then putting the mean in the middle
+        C_limits = [0 + rand(Unifrom(0,0.3))]
+
+
+
 
     C_limits = C[lower_prey_limit_pos: upper_prey_limit_pos]
     C_mean = (C_limits[2]-C_limits[1])*0.5
