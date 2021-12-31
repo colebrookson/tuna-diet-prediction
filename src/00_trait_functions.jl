@@ -94,4 +94,5 @@ function trait_preference(
     P_x = round((1/(sqrt(2*pi)*(sd)))*(exp((-0.5)*((x-mu)/sd)^2)), digits = 3)  
 
     return P_x
-end 
+end
+end  
