@@ -11,6 +11,8 @@
 # set up =======================================================================
 using DrWatson
 @quickactivate "tuna-diet-prediction"
+using Distributions
+
 
 
 # make distributions ===========================================================

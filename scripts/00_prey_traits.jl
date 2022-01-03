@@ -12,7 +12,7 @@
 
 using DrWatson
 @quickactivate "tuna-diet-prediction"
-include(srcdir("00_define_traits.jl"))
+include(srcdir("00_trait_functions.jl"))
 
 # get all species traits =======================================================
 
