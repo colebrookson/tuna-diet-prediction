@@ -11,17 +11,15 @@
 # set up =======================================================================
 using DrWatson
 @quickactivate "tuna-diet-prediction"
-using Distributions
+using Distributions, StatsBase, Random
 
 
 
 # make distributions ===========================================================
 
 # define some set of 7 distributions to draw from for the continuous traits
-#import Pkg
-#Pkg.add(["StatsPlots", "Distributions", "Random","StatsBase"])
-#Pkg.add("StatsBase")
-#using StatsPlots, Distributions, Random, StatsBase
+
+# set random seed 
 
 """
     draw_sp()
@@ -47,7 +45,10 @@ function draw_sp()
 end 
 
 """
-    trait_preference(i::Int, j::Int)
+    trait_preference(
+        i::Int, 
+        j::Int, 
+        prey_matrix::Matrix)
 
 This function takes in two species i (consumer) and j (resource) and determines 
 the trait-based preference. The idea here is to represent the predators 
@@ -80,10 +81,6 @@ function trait_preference(
     
     # deal with the numeric traits first 
     for k in (size(prey_matrix, 2)-3)
-        # limits are set by randomizing some amount away from zero and one that
-        # the distribution is limited to and then putting the mean in the middle
-        C_limits = [0 + rand(Uniform(0,0.3)), 1.0 - rand(Uniform(0,0.3))]
-        C_mean = (C_limits[2]-C_limits[1])*0.5
         # get the value of the trait that sp R has 
         R_trait = R[k]
         # set standard deviation for the consumer distribution  
@@ -104,6 +101,6 @@ function trait_preference(
         # now get P_x through ormal probability density function
         P_x = round((1/(sqrt(2*pi)*(sd)))*(exp((-0.5)*((x-mu)/sd)^2)), digits = 3)  
 
-    return P_x
-end
+        return P_x
+    end
 end  
