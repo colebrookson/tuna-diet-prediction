@@ -37,7 +37,7 @@ function draw_sp()
     trait_array[3] = rand(TruncatedNormal(0.7, 0.09, 0, 1))
     trait_array[4] = rand(Beta(5,2))
     trait_array[5] = rand(Beta(1,4))
-    trait_array[6] = rand(Exponential(0.34))
+    trait_array[6] = rand(truncated(Exponential(0.34), 0, 1))
     trait_array[7] = rand(truncated(Exponential(0.6), 0, 1))
     trait_array[8] = sample([1,2,3,4,5], Weights([5,5,1,1,3]))
     trait_array[9] = sample([1,2], Weights([1,1]))
@@ -67,33 +67,42 @@ function trait_preference(
     R = prey_matrix[j]
 
     # for each trait, set the predator's distribution of preference 
-    for k in size(prey_matrix, 2)
+
+    # get the means and sd's for each distribution above
+    mus = [0.5, 0.2, 0.7, ((5)/(5+2)), ((1)/(1+4)), 
+        mean(rand(truncated(Exponential(0.34), 0,1),10000)), 
+        mean(rand(truncated(Exponential(0.6), 0,1),10000))]
+    sds = [0.15, 0.4, 0.09, sqrt((5*2)/(((5+2)^2)*(5+2+1))), 
+        sqrt((5*2)/(((5+2)^2)*(5+2+1))),
+        sqrt((1*4)/(((1+4)^2)*(1+4+1))),
+        std(rand(truncated(Exponential(0.34), 0,1),10000)),
+        std(rand(truncated(Exponential(0.6), 0,1),10000))]
+    
+    # deal with the numeric traits first 
+    for k in (size(prey_matrix, 2)-3)
         # limits are set by randomizing some amount away from zero and one that
         # the distribution is limited to and then putting the mean in the middle
-        C_limits = [0 + rand(Unifrom(0,0.3))]
-
-
-
-
-    C_limits = C[lower_prey_limit_pos: upper_prey_limit_pos]
-    C_mean = (C_limits[2]-C_limits[1])*0.5
-    R_size = R[body_size_pos]
-
-    # set standard deviation for the 
-    sd_C = (C_limits[2] - C_mean)/3
-    sd = 0.4 # for the distribution being used
-    mu = 0.5 # for the distribution being used
-    if R_size == C_mean
-        y = mu 
-    elseif R_size > C_mean
-        y = (R_size - C_mean)/sd_C
-    else 
-        y = abs(R_size - C_mean)/sd_C
-    end 
-    # now get x 
-    x = mu + y*0.4
-    # now get P_x through ormal probability density function
-    P_x = round((1/(sqrt(2*pi)*(sd)))*(exp((-0.5)*((x-mu)/sd)^2)), digits = 3)  
+        C_limits = [0 + rand(Uniform(0,0.3)), 1.0 - rand(Uniform(0,0.3))]
+        C_mean = (C_limits[2]-C_limits[1])*0.5
+        # get the value of the trait that sp R has 
+        R_trait = R[k]
+        # set standard deviation for the consumer distribution  
+        sd_C = (C_limits[2] - C_mean)/3
+        # get the mean and s.d. from the distributions of each trait 
+        mu = mus[k]
+        sd = sds[k]
+        # get the y value by getting the value away from the C_mean 
+        if R_trait == C_mean
+            y = mu 
+        elseif R_trait > C_mean
+            y = (R_trait - C_mean)/sd_C
+        else 
+            y = abs(R_trait - C_mean)/sd_C
+        end 
+        # now get x 
+        x = mu + y*0.4
+        # now get P_x through ormal probability density function
+        P_x = round((1/(sqrt(2*pi)*(sd)))*(exp((-0.5)*((x-mu)/sd)^2)), digits = 3)  
 
     return P_x
 end
