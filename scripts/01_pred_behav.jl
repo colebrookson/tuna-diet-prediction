@@ -12,7 +12,7 @@
 
 using DrWatson
 @quickactivate "tuna-diet-prediction"
-using Distributions
+using Distributions, Random, StatsBase, DelimitedFiles
 
 # decide predator trait values =================================================
 
@@ -27,8 +27,6 @@ using Distributions
 C_object = zeros(7, 3)
 
 for i in 1:7
-
-    srand(1234)
     # for each trait draw from a distribution to get the values 
     lower = (0 + rand(Uniform(0,0.4)))
     upper = (1.0 - rand(Uniform(0,0.4)))
@@ -38,4 +36,4 @@ for i in 1:7
 end 
 
 # write out the C_object 
-writedlm(datadir("/pred_data/predator-traits.csv"), C_object, ",")
+writedlm(datadir("./pred_data/predator-traits.csv"), C_object, ",")
