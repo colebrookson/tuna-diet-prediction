@@ -13,6 +13,11 @@ using DrWatson
 @quickactivate "tuna-diet-prediction"
 using Distributions, StatsBase, Random
 
+# predator position values
+lower = 1
+avg = 2
+upper = 3
+
 
 
 # make distributions ===========================================================
@@ -58,14 +63,13 @@ then take the values and scale them to a distribution that gives f(X) ~= 1 when
 x = mu (in this case, mu = 0.5, sd = 0.4)
 """
 function trait_preference(
-    i::Array, 
+    C::Array, 
     j::Int,
     prey_matrix::Matrix
     )
 
     # define the consumer & resource
-    C = i
-    R = prey_matrix[j]
+    R = prey_matrix[j,:]
 
     # for each trait, set the predator's distribution of preference 
 
@@ -80,27 +84,92 @@ function trait_preference(
         std(rand(truncated(Exponential(0.6), 0,1),10000))]
     
     # deal with the numeric traits first 
-    for k in (size(prey_matrix, 2)-3)
+    numeric_trait_pref = []
+    for k in 1:7
         # get the value of the trait that sp R has 
         R_trait = R[k]
         # set standard deviation for the consumer distribution  
-        sd_C = (C_limits[2] - C_mean)/3
+        sd_C = (C[k,upper] - C[k,avg])/3
         # get the mean and s.d. from the distributions of each trait 
         mu = mus[k]
         sd = sds[k]
         # get the y value by getting the value away from the C_mean 
-        if R_trait == C_mean
+        if R_trait == C[k,avg]
             y = mu 
-        elseif R_trait > C_mean
-            y = (R_trait - C_mean)/sd_C
+        elseif R_trait > C[k,avg]
+            y = (R_trait - C[k,avg])/sd_C
         else 
-            y = abs(R_trait - C_mean)/sd_C
+            y = abs(R_trait - C[k,avg])/sd_C
         end 
         # now get x 
         x = mu + y*0.4
         # now get P_x through ormal probability density function
-        P_x = round((1/(sqrt(2*pi)*(sd)))*(exp((-0.5)*((x-mu)/sd)^2)), digits = 3)  
-
-        return P_x
+        P_x_k = round((1/(sqrt(2*pi)*(sd)))*(exp((-0.5)*((x-mu)/sd)^2)), digits = 3)  
+        append!(numeric_trait_pref, P_x_k)
     end
+
+    # NOTE to self: maybe instead do all the traits in the functional response one below 
+
+
 end  
+
+
+"""
+    functional_response(species_list, i, j, response_type)
+
+This function takes in a specific predator (i) and prey (j) and returns the 
+result of the functional response for the consumption of j by i which takes the 
+form:
+
+F_i(X_j)=frac{a_{ij}X^{q_{ij}}_{j}}{1+sum_{n=0}^{N-1}a_{in}h_{in}X^{q_{in}}_{n}}
+Fi(Xj) = a_ij*X^qij / 1 + sum(a_in h_in X^qin)
+"""
+function functional_response(
+    species_list::Array,
+    x::Array,
+    i::Int,
+    j::Int,
+    response_type::Int
+    )
+
+    # define predator and prey
+    R = get_species(species_list, j)
+
+    # get capture rate and capture exponent for focal prey 
+    capture_rate = (habitat_overlap(i, j)*
+                    size_preference(i,j)*
+                    R[nutritional_value_pos])
+    if response_type == 2
+        capture_exp = 2
+    elseif response_type == 3
+        capture_exp = 3
+    else 
+        ArgumentError("response type not valid - only type II or III supported")
+    end 
+
+    # get all prey items for the bottom half of the functional response 
+    prey_items = get_prey_items(species_list, network, i)
+    
+    # loop through them and get the capture rate, handling rate, and constant 
+    # capture exponent
+    denominator_sum = Float64[]
+    for q in prey_items
+        
+        R_temp = get_species(species_list, q)
+
+        capture_rate = (habitat_overlap(i, R_temp[organism_id_pos])*
+                        size_preference(i, R_temp[organism_id_pos])*
+                        R_temp[nutritional_value_pos])
+        handling_time = 1
+        capture_exp = response_type 
+
+        F = capture_rate*handling_time*(x[q]^capture_exp)
+        append!(denominator_sum, F)
+
+    end 
+
+    F = capture_rate*(x[j]^capture_exp) / (1 + sum(denominator_sum))
+    
+    return F
+
+end
