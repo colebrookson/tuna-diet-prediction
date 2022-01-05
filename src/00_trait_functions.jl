@@ -11,6 +11,7 @@
 # set up =======================================================================
 using DrWatson
 @quickactivate "tuna-diet-prediction"
+
 using Distributions, StatsBase, Random
 
 # predator position values
@@ -50,7 +51,7 @@ function draw_sp()
 end 
 
 """
-    trait_preference(
+    numeric_trait_preference(
         i::Int, 
         j::Int, 
         prey_matrix::Matrix)
@@ -62,7 +63,7 @@ the values of the actual predator max/min to the 0.01 and 0.99 interval, and
 then take the values and scale them to a distribution that gives f(X) ~= 1 when 
 x = mu (in this case, mu = 0.5, sd = 0.4)
 """
-function trait_preference(
+function numeric_trait_preference(
     C::Array, 
     j::Int,
     prey_matrix::Matrix
@@ -70,18 +71,6 @@ function trait_preference(
 
     # define the consumer & resource
     R = prey_matrix[j,:]
-
-    # for each trait, set the predator's distribution of preference 
-
-    # get the means and sd's for each distribution above
-    mus = [0.5, 0.2, 0.7, ((5)/(5+2)), ((1)/(1+4)), 
-        mean(rand(truncated(Exponential(0.34), 0,1),10000)), 
-        mean(rand(truncated(Exponential(0.6), 0,1),10000))]
-    sds = [0.15, 0.4, 0.09, sqrt((5*2)/(((5+2)^2)*(5+2+1))), 
-        sqrt((5*2)/(((5+2)^2)*(5+2+1))),
-        sqrt((1*4)/(((1+4)^2)*(1+4+1))),
-        std(rand(truncated(Exponential(0.34), 0,1),10000)),
-        std(rand(truncated(Exponential(0.6), 0,1),10000))]
     
     # deal with the numeric traits first 
     numeric_trait_pref = []
@@ -108,8 +97,6 @@ function trait_preference(
         append!(numeric_trait_pref, P_x_k)
     end
 
-    # NOTE to self: maybe instead do all the traits in the functional response one below 
-
 
 end  
 
@@ -125,15 +112,27 @@ F_i(X_j)=frac{a_{ij}X^{q_{ij}}_{j}}{1+sum_{n=0}^{N-1}a_{in}h_{in}X^{q_{in}}_{n}}
 Fi(Xj) = a_ij*X^qij / 1 + sum(a_in h_in X^qin)
 """
 function functional_response(
-    species_list::Array,
-    x::Array,
-    i::Int,
+    C::Array, 
     j::Int,
-    response_type::Int
+    prey_matrix::Matrix,
+    prey_abund::Array
     )
 
     # define predator and prey
-    R = get_species(species_list, j)
+    R = prey_matrix[j,:]
+    
+    # for each trait, set the predator's distribution of preference 
+
+    # get the means and sd's for each distribution above
+    mus = [0.5, 0.2, 0.7, ((5)/(5+2)), ((1)/(1+4)), 
+        mean(rand(truncated(Exponential(0.34), 0,1),10000)), 
+        mean(rand(truncated(Exponential(0.6), 0,1),10000))]
+    sds = [0.15, 0.4, 0.09, sqrt((5*2)/(((5+2)^2)*(5+2+1))), 
+        sqrt((5*2)/(((5+2)^2)*(5+2+1))),
+        sqrt((1*4)/(((1+4)^2)*(1+4+1))),
+        std(rand(truncated(Exponential(0.34), 0,1),10000)),
+        std(rand(truncated(Exponential(0.6), 0,1),10000))]
+
 
     # get capture rate and capture exponent for focal prey 
     capture_rate = (habitat_overlap(i, j)*
