@@ -15,7 +15,6 @@ using DrWatson
 using Distributions, StatsBase, Random, DelimitedFiles
 
 # predator position values
-C = readdlm(datadir("./pred_data/predator-traits.csv"), ',', Any)
 lower = 1
 avg = 2
 upper = 3
