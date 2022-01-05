@@ -19,8 +19,6 @@ lower = 1
 avg = 2
 upper = 3
 
-
-
 # make distributions ===========================================================
 
 # define some set of 7 distributions to draw from for the continuous traits
@@ -54,6 +52,7 @@ end
     numeric_trait_preference(
         i::Int, 
         j::Int, 
+        k::Int,
         prey_matrix::Matrix)
 
 This function takes in two species i (consumer) and j (resource) and determines 
@@ -65,37 +64,35 @@ x = mu (in this case, mu = 0.5, sd = 0.4)
 """
 function numeric_trait_preference(
     C::Array, 
-    j::Int,
+    j::Int, # the prey item number 
+    k::Int, # the trait number 
     prey_matrix::Matrix
     )
 
     # define the consumer & resource
     R = prey_matrix[j,:]
     
-    # deal with the numeric traits first 
-    numeric_trait_pref = []
-    for k in 1:7
-        # get the value of the trait that sp R has 
-        R_trait = R[k]
-        # set standard deviation for the consumer distribution  
-        sd_C = (C[k,upper] - C[k,avg])/3
-        # get the mean and s.d. from the distributions of each trait 
-        mu = mus[k]
-        sd = sds[k]
-        # get the y value by getting the value away from the C_mean 
-        if R_trait == C[k,avg]
-            y = mu 
-        elseif R_trait > C[k,avg]
-            y = (R_trait - C[k,avg])/sd_C
-        else 
-            y = abs(R_trait - C[k,avg])/sd_C
-        end 
-        # now get x 
-        x = mu + y*0.4
-        # now get P_x through ormal probability density function
-        P_x_k = round((1/(sqrt(2*pi)*(sd)))*(exp((-0.5)*((x-mu)/sd)^2)), digits = 3)  
-        append!(numeric_trait_pref, P_x_k)
-    end
+    # get the value of the trait that sp R has 
+    R_trait = R[k]
+    # set standard deviation for the consumer distribution  
+    sd_C = (C[k,upper] - C[k,avg])/3
+    # get the mean and s.d. from the distributions of each trait 
+    mu = mus[k]
+    sd = sds[k]
+    # get the y value by getting the value away from the C_mean 
+    if R_trait == C[k,avg]
+        y = mu 
+    elseif R_trait > C[k,avg]
+        y = (R_trait - C[k,avg])/sd_C
+    else 
+        y = abs(R_trait - C[k,avg])/sd_C
+    end 
+    # now get x 
+    x = mu + y*0.4
+    # now get P_x through ormal probability density function
+    P_x_k = round((1/(sqrt(2*pi)*(sd)))*(exp((-0.5)*((x-mu)/sd)^2)), digits = 3)  
+
+    return(P_x_k)
 
 
 end  
