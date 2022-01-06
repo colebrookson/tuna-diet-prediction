@@ -12,7 +12,20 @@
 
 using DrWatson
 @quickactivate "tuna-diet-prediction"
-using Distributions, Random, StatsBase, DelimitedFiles
+include(srcdir("00_trait_functions.jl"))
+
+# get all species traits =======================================================
+
+# set empty matrix
+prey_matrix = zeros(50, 11)
+
+# fill matrix
+for i in 1:size(prey_matrix, 1)
+    prey_matrix[i, 1] = i 
+    prey_matrix[i, 2:end] = draw_sp()
+end 
+
+writedlm(datadir("./trait_data/prey-matrix.csv"), prey_matrix, ",")
 
 # decide predator trait values =================================================
 
@@ -36,4 +49,4 @@ for i in 1:7
 end 
 
 # write out the C_object 
-writedlm(datadir("./pred_data/predator-traits.csv"), C_object, ",")
+writedlm(datadir("./trait_data/predator-traits.csv"), C_object, ",")

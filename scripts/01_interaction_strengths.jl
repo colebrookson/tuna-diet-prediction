@@ -12,15 +12,7 @@
 
 using DrWatson
 @quickactivate "tuna-diet-prediction"
-include(srcdir("00_trait_functions.jl"))
+using Distributions, Random, StatsBase, DelimitedFiles
 
-# get all species traits =======================================================
+# get predator interaction strengths with all prey =============================
 
-# set empty matrix
-prey_matrix = zeros(50, 11)
-
-# fill matrix
-for i in 1:size(prey_matrix, 1)
-    prey_matrix[i, 1] = i 
-    prey_matrix[i, 2:end] = draw_sp()
-end 
