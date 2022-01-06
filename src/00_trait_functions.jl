@@ -42,7 +42,7 @@ function draw_sp()
     trait_array[6] = rand(truncated(Exponential(0.34), 0, 1))
     trait_array[7] = rand(truncated(Exponential(0.6), 0, 1))
     trait_array[8] = sample([1,2,3,4,5], Weights([5,5,1,1,3]))
-    trait_array[9] = sample([1,2], Weights([1,1]))
+    trait_array[9] = sample([1,2,3,4,5], Weights([1,1,1,1,1]))
     trait_array[10] = sample([1,2,3,4,5], Weights([1,1,1,10,1]))
 
     return(trait_array)
@@ -110,7 +110,8 @@ function numeric_trait_preference(
     ########## END NOTE ##########
     x = mu
 
-    max_P_x_k = round((1/(sqrt(2*pi)*(sd)))*(exp((-0.5)*((x-mu)/sd)^2)), digits = 3)  
+    max_P_x_k = round((1/(sqrt(2*pi)*(sd)))*(exp((-0.5)*((x-mu)/sd)^2)), 
+                        digits = 3)  
 
     # return the scaled value (i.e. divided by the max value )
     return(P_x_k/max_P_x_k)
@@ -127,7 +128,8 @@ form:
 F_i = \frac{a_{ic}p_i}{1 + \tau_c \sum_j a_{jc}p_j}
 """
 function functional_response(
-    C::Array, 
+    C_num::Array, 
+    C_cat::Array,
     i::Int,
     prey_matrix::Matrix,
     prey_abund::Array
@@ -138,8 +140,25 @@ function functional_response(
 
     # make empty array for the preferences 
     pref = []
+    # do the numeric preferences first
     for k in 1:7
-        append!(pref, numeric_trait_preference(C, i, k, prey_matrix))
+        append!(pref, numeric_trait_preference(C_num, i, k, prey_matrix))
+    end 
+    # now do the categorical preferences 
+    for k in 1:3 # go through the three categorical traits 
+        for q in 1:5 # for each of the 5 trait options 
+            if C_cat[k,q] == R[i,k+7] # check if the prey trait is one 
+                                      # the predator can actually consume 
+                # if the prey trait is one the predator can consume then give 
+                # the value of 1.0 divided by the number of categories of that 
+                # trait the predator can actually consume (i.e. the predator 
+                # will prefer a prey trait that it can only consume versus one 
+                # it can consume other options of)
+                append!(pref, (1.0/sum(C_cat[k,:]))) 
+            else 
+                # if the prey trait isn't one the predator can consume, give 0.0
+                append!(pref, 0.0) 
+        end 
     end 
 
     a_ic = sum(pref) # sum pref to get the preference for a single prey item 
@@ -151,7 +170,8 @@ function functional_response(
     for j in 1:size(prey_matrix, 1)
         pref_sum = []
         for k in 1:7
-            append!(pref_sum, numeric_trait_preference(C, j, k, prey_matrix))
+            append!(pref_sum, 
+                    numeric_trait_preference(C_num, j, k, prey_matrix))
         end 
         append!(denominator_sum, (sum(pref_sum)*prey_abund[i]))
     end

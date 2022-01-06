@@ -16,3 +16,6 @@ using Distributions, Random, StatsBase, DelimitedFiles
 
 # get predator interaction strengths with all prey =============================
 
+# read in predator traits 
+C_num = readdlm(datadir("./trait_data/predator-numeric-traits.csv"), ',', Any)
+C_cat = readdlm(datadir("./trait_data/predator-categorical-traits.csv"), ',', Any)

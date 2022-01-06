@@ -34,10 +34,12 @@ writedlm(datadir("./trait_data/prey-matrix.csv"), prey_matrix, ",")
 # value, all given by a normal distribution. For each trait, I define that 
 # distribution randomly, have it bounded [0,1]. The limits are set by 
 # randomizing some amount away from 0 and 1 that the distribution is 
-# limited to and then putting the mean in the middle
+# limited to and then putting the mean in the middle. For the categorical traits
+# it's assumed there's no difference in preference between the different ones 
+# that the predator has access to, so they're all termed a value of 1.0.
 ######## END NOTE #########
 
-C_object = zeros(7, 3)
+C_num_object = zeros(7, 3)
 
 for i in 1:7
     # for each trait draw from a distribution to get the values 
@@ -45,8 +47,17 @@ for i in 1:7
     upper = (1.0 - rand(Uniform(0,0.4)))
     mean = (upper-lower)*0.5
     
-    C_object[i, :] = [lower, mean, upper]
+    C_num_object[i, :] = [lower, mean, upper]
 end 
 
+C_cat_object = zeros(3,5)
+# randomly pick which of the categorical traits the predator has
+for i in 1:3
+    for j in 1:5
+    C_cat_object[i,j] = sample([0.0,1.0])
+    end 
+end
+
 # write out the C_object 
-writedlm(datadir("./trait_data/predator-traits.csv"), C_object, ",")
+writedlm(datadir("./trait_data/predator-numeric-traits.csv"), C_num_object, ",")
+writedlm(datadir("./trait_data/predator-categorical-traits.csv"), C_cat_object, ",")
