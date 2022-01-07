@@ -119,13 +119,13 @@ function numeric_trait_preference(
 end  
 
 """
-    functional_response(species_list, i, j, response_type)
+    functional_response(C_num, C_cat, i, prey_matrix, prey_abund)
 
 This function takes in a specific predator (i) and prey (j) and returns the 
 result of the functional response for the consumption of j by i which takes the 
 form:
 
-F_i = \frac{a_{ic}p_i}{1 + \tau_c \sum_j a_{jc}p_j}
+F_i = frac{a_{ic}p_i}{1 + tau_c sum_j a_{jc}p_j}
 """
 function functional_response(
     C_num::Array, 
@@ -147,7 +147,7 @@ function functional_response(
     # now do the categorical preferences 
     for k in 1:3 # go through the three categorical traits 
         for q in 1:5 # for each of the 5 trait options 
-            if C_cat[k,q] == R[i,k+7] # check if the prey trait is one 
+            if C_cat[k,q] == R[k+7] # check if the prey trait is one 
                                       # the predator can actually consume 
                 # if the prey trait is one the predator can consume then give 
                 # the value of 1.0 divided by the number of categories of that 
@@ -158,6 +158,7 @@ function functional_response(
             else 
                 # if the prey trait isn't one the predator can consume, give 0.0
                 append!(pref, 0.0) 
+            end
         end 
     end 
 
@@ -178,5 +179,5 @@ function functional_response(
 
     Fi = a_ic_p_i/(1 + 0.5*sum(denominator_sum))
     
-    return Fi
+    return(Fi)
 end
