@@ -14,7 +14,7 @@ include("00_setup.jl")
 
 using DrWatson
 @quickactivate "tuna-diet-prediction"
-using Distributions, Random, StatsBase, DelimitedFiles
+using Distributions, Random, StatsBase, DelimitedFiles, Plots
 
 include(srcdir("00_trait_functions.jl"))
 
@@ -37,4 +37,5 @@ for i in 1:size(prey_interactions, 1)
                                                     prey_matrix,
                                                     prey_abund)
 end 
+writedlm(datadir("./trait_data/interaction-strengths.csv"), prey_interactions, ",")
 
