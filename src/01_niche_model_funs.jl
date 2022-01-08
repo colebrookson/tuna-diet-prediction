@@ -34,6 +34,16 @@ function niche_position(
 
 end 
 
+"""
+"""
+function optimal_feeding_pos(
+    d::int, # the dimension of the trait 
+    C_num::Array, # the array of numeric predator values 
+    C_cat::Array # array of categorical predator values 
+    )
+
+end 
+
 
 function niche_model(
     alpha::
