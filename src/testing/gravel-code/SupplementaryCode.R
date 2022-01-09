@@ -39,7 +39,8 @@
 # Mat_Cooc : Co-ocurence martix 
 
 ### Data loading
-load("data.rdata")
+library(here)
+load(here("data.rdata"))
 
 
 ##############################################
