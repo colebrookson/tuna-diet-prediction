@@ -10,7 +10,7 @@
 
 # set up =======================================================================
 
-include("00_setup.jl")
+include("./00_setup.jl")
 
 using DrWatson
 @quickactivate "tuna-diet-prediction"
