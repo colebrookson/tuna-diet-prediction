@@ -16,7 +16,7 @@ using DrWatson
 @quickactivate "tuna-diet-prediction"
 using Distributions, Random, StatsBase, DelimitedFiles, Plots, Turing
 
-prey_interactions = readdlm(datadir("./trait_data/interaction-strengths.csv"), ',', Any)
+prey_interactions = readdlm(datadir("./trait-data/interaction-strengths.csv"), ',', Any)
 
 # specify niche model functions ================================================
 

@@ -25,7 +25,7 @@ for i in 1:size(prey_matrix, 1)
     prey_matrix[i, 2:end] = draw_sp()
 end 
 
-writedlm(datadir("./trait_data/prey-matrix.csv"), prey_matrix, ",")
+writedlm(datadir("./trait-data/prey-matrix.csv"), prey_matrix, ",")
 
 # decide predator trait values =================================================
 
@@ -59,5 +59,5 @@ for i in 1:3
 end
 
 # write out the C_object 
-writedlm(datadir("./trait_data/predator-numeric-traits.csv"), C_num_object, ",")
-writedlm(datadir("./trait_data/predator-categorical-traits.csv"), C_cat_object, ",")
+writedlm(datadir("./trait-data/predator-numeric-traits.csv"), C_num_object, ",")
+writedlm(datadir("./trait-data/predator-categorical-traits.csv"), C_cat_object, ",")
