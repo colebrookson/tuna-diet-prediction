@@ -96,5 +96,11 @@ for i in 1:size(sim_stomachs_10000, 1)
 end
 
 # write out data 
-writedlm(datadir("./stomach-data/interaction-strengths.csv"), 
-                prey_interactions, ",")
+writedlm(datadir("./stomach-data/sim_stomachs_10.csv"), 
+                    sim_stomachs_10, ",")
+writedlm(datadir("./stomach-data/sim_stomachs_100.csv"), 
+                    sim_stomachs_100, ",")
+writedlm(datadir("./stomach-data/sim_stomachs_1000.csv"), 
+                    sim_stomachs_1000, ",")
+writedlm(datadir("./stomach-data/sim_stomachs_10000.csv"), 
+                    sim_stomachs_10000, ",")

@@ -3,8 +3,12 @@ authors = ["ColeBrookson"]
 
 [deps]
 AdvancedPS = "576499cb-2369-40b2-a588-c64705576edc"
+CSV = "336ed68f-0bac-5ca0-87d4-7b16caf5d00b"
+DataFrames = "a93c6f00-e57d-5684-b7b6-d8193f3e46c0"
 Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 DrWatson = "634d3b9d-ee7a-5ddf-bec9-22491ea816e1"
+HTTP = "cd3eb016-35fb-5094-929b-558a96fad6f3"
+LazyArrays = "5078a376-72f3-5289-bfd5-ec5146d43c02"
 Libtask = "6f1fad26-d15e-5dc8-ae53-837a1d7b8c9f"
 Libtask_jll = "3ae2931a-708c-5973-9c38-ccf7496fb450"
 Plots = "91a5bcdd-55d7-5caf-9e0b-520d859cae80"

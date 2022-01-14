@@ -1,0 +1,57 @@
+---
+title: "Untitled"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r}
+Parameters <- c("r, Intrinsic growth rate of parasite", "k, Rate of destruction of parasite by host immune system", "ρ, Maximum growth rate of the immune system", "𝜙, Parasite density at which growth rate of host immune system is half its maximum","D, Lethal within-host parasite density")
+Values <- c("0.1-2.0", "0.001", "1", "1000", "10<sup>9</sup>")
+parms_table <- data.frame(Parameters, Values)
+library(knitr)
+kable(parms_table, 
+      caption = "Table 1")
+```
+
+
+```{r}
+# Parameters <- c("r, Intrinsic growth rate of parasite", "k, Rate of destruction of parasite by host immune system", "ρ, Maximum growth rate of the immune system", "𝜙, Parasite density at which growth rate of host immune system is half its maximum","D, Lethal within-host parasite density")
+# Values <- c("0.1-2.0", "0.001", "1", "1000", "10HACKIT")
+# parms_table <- data.frame(Parameters, Values)
+# library(knitr)
+# library(kableExtra)
+# library(stringr)
+# kable(parms_table, 
+#       format = "latex",
+#       align = "c") %>% 
+#   kable_styling(bootstrap_options = c("hover"),
+#                 full_width = FALSE,
+#                 font_size = 12, 
+#                 position = "left")
+# knitr::asis_output(str_replace(tmp, "HACKIT", "$^{9}$"))
+
+```
+
+
+
+```{r}
+
+# df <- data.frame(city=c("NYCHACKIT","LA","CHI","MIA"),score=sample(1:100, 4, replace=T))
+# 
+# tmp <- knitr::kable(df,  
+#       digits = 2,
+#       format = "latex",
+#       align="c",
+#       row.names = FALSE,
+#       booktabs=T) %>%
+#   kable_styling(bootstrap_options = c("hover"),
+#                 full_width = F,
+#                 font_size = 12,
+#                 position = "left") %>%
+#   footnote(number = c("2017 data missing"))
+# 
+# knitr::asis_output(str_replace(tmp, "HACKIT", "$^{1}$"))
+
+```
+
