@@ -24,3 +24,13 @@ model = logreg(X, y);
 
 chain = sample(model, NUTS(), MCMCThreads(), 2_000, 4)
 summarystats(chain)
+
+using Chain
+
+@chain quantile(chain) begin
+    DataFrame
+    select(_,
+        :parameters,
+        names(_, r"%") .=> ByRow(exp),
+        renamecols=false)
+end
