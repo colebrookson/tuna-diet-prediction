@@ -48,17 +48,17 @@ c_num = readdlm(datadir("./trait-data/predator-numeric-traits.csv"), ',', Any)
     for i in 1:n
         probs = zeros(3)
         for j in 1:7 
-            prob1 = exp((-1)*abs(((niche1*x[i,j])-(center1*x[i,j+8]))/(10/2))^ex)
-            prob2 = exp((-1)*abs(((niche2*x[i,j])-(center2*x[i,j+8]))/(10/2))^ex)
-            prob3 = exp((-1)*abs(((niche3*x[i,j])-(center3*x[i,j+8]))/(10/2))^ex)
-            prob4 = exp((-1)*abs(((niche4*x[i,j])-(center4*x[i,j+8]))/(10/2))^ex)
-            prob5 = exp((-1)*abs(((niche5*x[i,j])-(center5*x[i,j+8]))/(10/2))^ex)
-            prob6 = exp((-1)*abs(((niche6*x[i,j])-(center6*x[i,j+8]))/(10/2))^ex)
-            prob7 = exp((-1)*abs(((niche7*x[i,j])-(center7*x[i,j+8]))/(10/2))^ex)
+            prob1 = exp((-1)*abs(((niche1*x[i,j])-(center1*x[i,j+7]))/(10/2))^ex)
+            prob2 = exp((-1)*abs(((niche2*x[i,j])-(center2*x[i,j+7]))/(10/2))^ex)
+            prob3 = exp((-1)*abs(((niche3*x[i,j])-(center3*x[i,j+7]))/(10/2))^ex)
+            prob4 = exp((-1)*abs(((niche4*x[i,j])-(center4*x[i,j+7]))/(10/2))^ex)
+            prob5 = exp((-1)*abs(((niche5*x[i,j])-(center5*x[i,j+7]))/(10/2))^ex)
+            prob6 = exp((-1)*abs(((niche6*x[i,j])-(center6*x[i,j+7]))/(10/2))^ex)
+            prob7 = exp((-1)*abs(((niche7*x[i,j])-(center7*x[i,j+7]))/(10/2))^ex)
 
             probs = prob1, prob2, prob3, prob4, prob5, prob6, prob7
         end 
-        to_sample = 0.9999 * product(probs)
+        to_sample = 0.9999 * prod(probs)
         y[i] ~ Bernoulli(to_sample)
     end 
 end;
@@ -76,13 +76,13 @@ q = 1
 for i in 1:size(split_easy,1)
     for j in 1:size(split_easy, 2)
         trainset[q,1] = split_easy[i,j]
-        trainset[q,2] = prey_matrix[i,1]
-        trainset[q,3] = prey_matrix[i,2]
-        trainset[q,4] = prey_matrix[i,3]
-        trainset[q,5] = prey_matrix[i,4]
-        trainset[q,6] = prey_matrix[i,5]
-        trainset[q,7] = prey_matrix[i,6]
-        trainset[q,8] = prey_matrix[i,7]
+        trainset[q,2] = prey_matrix[i,2]
+        trainset[q,3] = prey_matrix[i,3]
+        trainset[q,4] = prey_matrix[i,4]
+        trainset[q,5] = prey_matrix[i,5]
+        trainset[q,6] = prey_matrix[i,6]
+        trainset[q,7] = prey_matrix[i,7]
+        trainset[q,8] = prey_matrix[i,8]
 
         trainset[q,9] = c_num[1,2]
         trainset[q,10] = c_num[2,2]
