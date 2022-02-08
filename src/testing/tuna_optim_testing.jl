@@ -1,4 +1,4 @@
-using Optim, NLSolversBase, Random
+using Optim, NLSolversBase, Random, Distributions
 using LinearAlgebra: diag
 Random.seed!(0); 
 
@@ -35,6 +35,7 @@ s = zeros(m)
 
 for i in 1:n
   p = exp.(theta[i] .- delta) ./ (1.0 .+ exp.(theta[i] .- delta))
+  p = 
   for j in 1:m
     if rand() < p[j] ##correct
       r[i] += 1
@@ -146,4 +147,12 @@ delta_hat = res.minimizer
 
 n = 50 # number of stomachs
 d = 3 # number of traits
+niche = randn(n*d)
+sample(TruncatedNormal(0,10,2,1),10)
+cutoff = rand(1)
+
+for i in 1:n
+    vals = []
+    for j in 1:d
+        p_jd = exp(-1*abs((niche[i] - 10)/(5/2))^(cutoff))
 
