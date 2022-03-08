@@ -149,7 +149,7 @@ n = 50 # number of stomachs
 d = 3 # number of traits
 niche = randn(n*d)
 sample(TruncatedNormal(0,10,2,1),10)
-cutoff = rand(1)
+cutoff = rand()
 
 for i in 1:n
     vals = []
